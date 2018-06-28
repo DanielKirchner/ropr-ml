@@ -1,0 +1,17 @@
+feature;value;class;
+forearmLeft;0.324064;p002;
+upperarmLeft;0.256004;p002;
+shoulderHalfLeft;0.186687;p002;
+neck;0.0860084;p002;
+shoulderHalfRight;0.197729;p002;
+upperarmRight;0.256145;p002;
+forearmRight;0.299226;p002;
+shoulder;0.301542;p002;
+upperBody;0.2623;p002;
+hip;0.159287;p002;
+lowerBody;0.356322;p002;
+body;0.618553;p002;
+lowerLegLeft;0.433215;p002;
+upperLegLeft;0.361285;p002;
+upperLegRight;0.35698;p002;
+lowerLegRight;0.406368;p002;
