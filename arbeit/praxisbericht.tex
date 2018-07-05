@@ -5,6 +5,7 @@
 \usepackage{tabularx}
 \usepackage{textcomp}
 \usepackage{mathtools}
+\usepackage{xparse,nameref}
 
 \input{praxisbericht_macros.tex}
 
@@ -21,6 +22,10 @@
 	\vspace*{2\baselineskip}
 	\fontsize{22}{24}\selectfont
 	Daniel Kirchner\\
+	\vspace*{1\baselineskip}
+	betreut durch Prof. Dr. Kolja Kühnlenz\\
+	\vspace*{1\baselineskip}
+	\textbf{05. Juli 2018}
 \end{titlepage}
 
 \section*{Hinweis}
@@ -59,15 +64,16 @@ verfügbar.
 
 \newpage
 \chapter{Robotik Projekt}
-Das \textit{Robotik Projekt} ist ein für technische Studiengänge angebotenes Wahlpflichtfach, bei dem Studenten aus einer gegebenen Liste ein Projekt zur Bearbeitung für ein Semester auswählen können. In meinem Fall kommt das Projekt von einem Masterstudenten aus dem Studiengang Elektrotechnik und befasst sich mit der Authentifizierung mit Hilfe einer Microsoft Kinect.
+Das \textit{Robotik Projekt} ist ein für technische Studiengänge angebotenes Wahlpflichtfach, bei dem Studenten aus einer gegebenen Liste ein Projekt zur Bearbeitung für ein Semester auswählen können. Dieses Projekt kommt von einem Masterstudenten aus dem Studiengang Elektrotechnik und befasst sich mit der Authentifizierung mit Hilfe einer Microsoft Kinect.
+
 \section{Projektbeschreibung}
 \label{sec:beschreibung}
-Der von mir bearbeitete Teilbereich des Projekts beschränkt sich auf das softwareseitige Auswerten der Rohdaten.\\
-Geliefert werden diese von einer Kinect, was eine Hardware der Firma Microsoft ist.
-Diese ermöglicht es, mit Hilfe eines Tiefensensor und einer Kamera räumliche Vorgänge aufzunehmen.\cite{kinect}
-Auch enthält die Kinect-API\footnote{s. \url{https://docs.microsoft.com/en-us/previous-versions/windows/kinect/dn758675(v\%3dieb.10)}} ein System zur Erkennung von Personen und liefert diverse Information (z.B. Position im Raum, Haltung) über diese zurück.\\
-Das Ziel des Projektes ist es, zu bewerten, welcher Machine Learning Ansatz für das eindeutige Klassifizieren von Probanden anhand der Daten der Kinect geeignet ist. Sollte dies funktionieren, kann der Ansatz zum Beispiel als Authentifizierungsmethode verwendet werden.
-In Frage kommen hierfür sowohl ''konventionelle'' Algorithmen (SVM,Naive Bayes,etc.) als auch neuronale Netze. Aufgrund meiner Erfahrung im Umgang mit Support Vector Machines, wurden diese als Startpunkt zur Recherche gewählt.
+Der in dieser Arbeit behandelte Teilbereich des Projekts beschränkt sich auf das softwareseitige Auswerten der Rohdaten.\\
+Geliefert werden diese von einer Kinect v2 Kamera der Firma Microsoft.
+Diese ermöglicht es, mit Hilfe eines Tiefensensor und einer RGB-Kamera räumliche Vorgänge aufzunehmen.\cite{kinect}
+Auch enthält die Kinect-API ein System zur Erkennung von Personen und liefert diverse Information (z.B. Position im Raum, Haltung) über diese zurück.\\
+Das Ziel des Projektes ist es, zu bewerten, welche Machine Learning Ansätze für das eindeutige Klassifizieren von Probanden anhand der Daten der Kinect geeignet sind. Sollte dies funktionieren, kann der Ansatz beispielhaft als Authentifizierungsmethode verwendet werden.
+In Frage kommen hierfür sowohl ''konventionelle'' Algorithmen (SVM,Naive Bayes,etc.) als auch neuronale Netze. Aufgrund vorhandener Erfahrung im Umgang mit Support Vector Machines, wurden diese als Startpunkt zur Recherche gewählt.
 
 \section{Zeitplan}
 Ein wichtiger Aspekt der Projektplanung ist der Zeitplan, welcher sich in diesem Fall wie folgt gestaltete:\\
@@ -80,7 +86,7 @@ Ein wichtiger Aspekt der Projektplanung ist der Zeitplan, welcher sich in diesem
 	\hline
 	Einarbeitung SVM
 	& Einarbeitung in die Thematik \textit{Support Vector Machines}
-	& 2 Woche
+	& 2 Wochen
 	\\
 	\hline
 	Finden von Alternativlösungen
@@ -107,21 +113,30 @@ Ein wichtiger Aspekt der Projektplanung ist der Zeitplan, welcher sich in diesem
 \end{table}
 \end{center}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.85]{img/gannt.png}
+	\caption{Gantt-Diagramm des Zeitplans}
+	\label{fig:gannt}
+\end{figure}
+
+
+\NewDocumentCommand{\chapref}{s m}{Kapitel~\ref{#2}\IfBooleanF{#1}{ \nameref{#2}}}
 \chapter{Projektumsetzung}
-Dieses Kapitel beschäftigt sich mit der Umsetzung des in \hyperref[sec:beschreibung]{\textit{Projektbeschreibung}} beschriebenen Projekts. Zunächst wird erläutert, welche Frameworks und Programmiersprachen zur Umsetzung verwendet wurden. Danach soll erklärt werden, wie die benötigten Daten beschafft wurden, in den folgenden Unterkapiteln werden dann einzelne Algorithmen und deren Besonderheiten vorgestellt werden.
+Dieses Kapitel beschäftigt sich mit der Umsetzung des in \chapref{sec:beschreibung} beschriebenen Projekts. Zunächst wird erläutert, welche Frameworks und Programmiersprachen zur Umsetzung verwendet wurden. Danach soll erklärt werden, wie die benötigten Daten beschafft wurden, in den folgenden Unterkapiteln werden dann einzelne Algorithmen und deren Besonderheiten vorgestellt werden.
 
 \section{Softwarestruktur}
-Ob eine eigene Implementierung der Algorithmen sinnvoll ist war eine wichtige Entscheidung im Rahmen dieses Projekts. Letztendlich war jedoch der zeitliche Aufwand dafür zu groß, der Zeitraum für das Projekt wäre wahrscheinlich nicht einhaltbar gewesen.\\
+Ob eine eigene Implementierung der Algorithmen sinnvoll ist, war eine wichtige Entscheidung im Rahmen dieses Projekts. Letztendlich war jedoch der zeitliche Aufwand dafür zu groß, der Zeitraum für das Projekt wäre wahrscheinlich nicht einhaltbar gewesen.\\
 Dementsprechend musste auf Implementierungen in fertigen Frameworks zurückgegriffen werden. Die beiden attraktivsten Optionen waren hier \textit{scikit-learn}\footnote{Homepage: \url{http://scikit-learn.org/stable/index.html}} und \textit{mlr} \footnote{Repository: \url{https://github.com/mlr-org/mlr}}.\\
-Letzteres ist ein im professionellen Bereich oft verwendetes Framework, welches jedoch die Verwendung der Programmiersprache \textit{R} voraussetzt. Da ich diese leider nicht beherrsche musste weiter nach einer Alternative gesucht werden.\\
-\textit{scikit-learn} ist ein in \textit{Python} implementiertes Framework mit sehr aktiven Entwicklern und einer großen Auswahl an diversen Machine Learning Algorithmen. Es ist unter der BSD Lizenz frei (sogar für Unternehmen) verfügbar.\\
-Da ich in bereits Erfahrung im Umgang mit \textit{Python} Programmierung habe entschied ich mich auch letztendlich für die Verwendung von \textit{scikit-learn}.
+Letzteres ist ein im professionellen Bereich oft verwendetes Framework, welches jedoch die Verwendung der Programmiersprache \textit{R} voraussetzt. Das Erlernen dieser würde eine umfangreiche Einarbeitung voraussetzen, was im Rahmen dieses Projekts nicht durchführbar war.\\
+\textit{scikit-learn} ist ein in \textit{Python} implementiertes Framework mit sehr aktiven Entwicklern und einer großen Auswahl an diversen Machine Learning Algorithmen. Es ist unter der BSD Lizenz frei verfügbar (sogar kommerziell für Unternehmen).\\
+Aufgrund dieser Vorteile und vorhanden Kenntnissen mit der Sprache \textit{Python} wurde \textit{scikit-learn} als Framework ausgewählt.
 
 \section{Datenbeschaffung}
 Alle Machine Learning Algorithmen benötigen einen Trainingsdatensatz.
 Um solide Klassifizierungen zu erreichen, müssen genügend Trainingsdaten geliefert werden. Da die Anzahl der benötigten Daten je nach Algorithmus variiert, werden einfach so viele Daten wie möglich von so vielen Personen wie möglich erfasst.
 
-Im Rahmen dieses Projektes kommen die Trainingsdaten von einigen Freiwilligen, welche sich in verschiedenen Positionen vor der Kinect aufstellten. Der Ablauf hierfür war für alle Freiwilligen:
+Im Rahmen dieses Projektes kommen die Trainingsdaten von einigen Freiwilligen, welche sich in verschiedenen Positionen vor der Kinect aufstellen. Der Ablauf hierfür war für alle Freiwilligen:
 \begin{enumerate}
 	\item In kurzem Abstand mit dem Gesicht zu der Kinect stehen
 	\item Um 180\textdegree auf der Stelle drehen
@@ -131,7 +146,7 @@ Im Rahmen dieses Projektes kommen die Trainingsdaten von einigen Freiwilligen, w
 \end{enumerate}
 Zwischen den einzelnen Ablaufschritten finden jeweils kurze Pausen statt, da die Kinect ca. 30 Aufnahmen pro Sekunde nimmt und so noch mehr Trainingsdaten aufgenommen werden können.\\
 Der durch dieses Verfahren entstehende Datensatz wurde von 11 Personen erfasst, was in 210160 einzelnen Datenpunkten\footnote{Ein Datenpunkt enthält alle 25 möglichen erkannten Körperteile} resultierte.
-s
+
 \section{Datenbearbeitung}
 \label{sec:import}
 Die Rohdaten liegen im folgenden Format vor:
@@ -144,7 +159,7 @@ AnkleRight;1513719;-0,7247724;1,501014;Inferred;
 ...
 \end{lstlisting}
 Es handelt sich hierbei um eine .csv-Datei, in welcher die einzelnen Spalten durch Semikolon separiert sind.
-Der Eintrag der ersten Spalte enthält den Namen des erkannten Körperteils, während in der zweiten und dritten Spalte dessen Koordinaten eingetragen sind.\\
+Der Eintrag der ersten Spalte enthält den Namen des erkannten Körperteils, während in der zweiten,dritten und vierten Spalte dessen Koordinaten eingetragen sind.\\
 Die letzte Spalte enthält einen Status über die Messung des Körperteils. Diese kann die beiden Zustände \textit{Inferred} und \textit{Tracked} annehmen, wobei der Normalfall hierbei \textit{Tracked} ist. In den Zeilen, deren Status \textit{Inferred} ist, wurde die Position eines nicht durch die Hardware erkannten Körperteils errechnet \cite{shotton2011real}.
 Datenpunkte, die errechnete Körperteilpositionen enthalten, werden aussortiert.
 
@@ -155,7 +170,9 @@ In der folgenden Abbildung ist eine visuelle Darstellung eines einzelnen Datenpu
 	\caption{Visualisierung von Kinect-Rohdaten, links: Körperteile und deren Bezeichnungen, rechts: Koordinaten der Körperteile mit eingezeichnetem Skelet, gezeichnet mit matplotlib}
 \end{figure}
 
-Um weniger Features (Inputs für die Algorithmen) zu erreichen, werden die Daten reduziert. Das heißt in diesem Fall, dass mehrere Körperteilkoordinaten in die Länge des Körperteils zusammengefasst werden. Hierbei geht allerdings auch Information über z.B. die Winkel zwischen den Körperteilen verloren. Sollte also mit diesen reduzierten Inputdaten keine hohe Präzision in der Klassifizierung erreichbar sein, könnten die Winkel und andere Information als zusätzliche Features wieder später eingefügt werden.\\
+Um weniger Features (Inputs für die Algorithmen) zu erreichen, werden die Daten reduziert. Das heißt in diesem Fall, dass mehrere Körperteilkoordinaten in die Länge des Körperteils zusammengefasst werden.\\
+Dies hat außerdem den Vorteil, dass die Daten unabhängig von der Position der Person im Raum ist, bzw. wie diese relativ zur Kamera steht.\\
+Hierbei geht allerdings auch Information über z.B. die Winkel zwischen den Körperteilen verloren. Sollte also mit diesen reduzierten Inputdaten keine hohe Präzision in der Klassifizierung erreichbar sein, könnten die Winkel und andere Information als zusätzliche Features wieder später eingefügt werden.\\
 Eine reduzierte Inputdatei sieht nun so aus:\\
 
 \begin{lstlisting}[caption=Reduzierte Daten,captionpos=b]
@@ -167,7 +184,7 @@ upperarmRight;0.27685;
 \end{lstlisting}
 Insgesamt wird die Inputinformation so von 25 Körperteilkoordinaten auf die 16 Körperteillängen reduziert.\\
 Um die Genauigkeit eines Algorithmus zu ermitteln, sollten dafür Datenpunkte verwendet werden, die nicht in den Trainingsdaten enthalten waren. So sieht der Algorithmus diese Daten ''zum ersten Mal'' und kann keine primitive Abbildung von Inputwerten auf Outputwerte bilden. Falls zwar eine hohe Genauigkeit auf den Trainingsdaten erzielt werden kann, jedoch nicht mit bisher unbekannten Werten spricht man von ''Overfitting''.\\
-Um diesen Effekt zu vermeiden werden die vorhandenen Daten in zwei Gruppen unterteilt. Die erste Gruppe wird dem Algorithmus zum trainieren gegeben, während die zweite Gruppe nur zu dessen Evaluation verwendet wird. Ich habe mich für eine 80-20 Aufteilung zwischen diesen Gruppen entschieden, wobei die Trainingsdaten die größere Gruppe sind.\\
+Um diesen Effekt zu vermeiden werden die vorhandenen Daten in zwei Gruppen unterteilt. Die erste Gruppe wird dem Algorithmus zum trainieren gegeben, während die zweite Gruppe nur zu dessen Evaluation verwendet wird. Hierbei hat sich eine 80-20 Aufteilung zwischen diesen Gruppen als sinnvoll erwiesen, wobei die Trainingsdaten die größere Gruppe sind.\\
 Die gesamte  in diesem Abschnitt beschriebene Vorgang ist in der Methode \textit{load()} (Datei: \textbf{load.py}) implementiert.
 \section{Support Vector Machine}
 \label{sec:svm}
@@ -187,7 +204,7 @@ Anhand der folgenden Abbildung soll die Verwendung der Support Vector Machine ve
 \end{figure}
 
 Die rot dargestellten Punkte sind hier Mitglieder der Klasse $A$, während die blauen Punkte Mitglieder der Klasse $B$ sind. Die Gerade $m$ teilt die beiden Klassen voneinander.\\
-Die Geraden $g1$ und $g2$ sind parallel zu $m$ und haben jeweils den gleichen Abstand zu $m$. Diese sind die sogenannten Stützvektoren (eng. \textit{support vectors}). Um eine optimale Klassifizierung gewährleisten zu können wird nun die Gerade $m$ gesucht, für die der Abstand zu den nächsten Punkten beider Klassen $a$ maximal ist.\\
+Die Geraden $g1$ und $g2$ sind parallel zu $m$ und haben jeweils den gleichen Abstand zu $m$. Um eine optimale Klassifizierung gewährleisten zu können wird nun die Gerade $m$ gesucht, für die der Abstand zu den nächsten Punkten beider Klassen $a$,  maximal ist. Die Ortsvektoren dieser Punkte werden auch Stützvektoren oder \textit{support vectors} genannt.\\
 Der Vektor $w$ zeigt rechtwinklig auf $m$ und ist von beliebiger Länge.\\
 Um nun festzustellen, in welcher Klasse ein neuer, nicht klassifizierter, Punkt $U$ liegt, wird dessen Ortsvektor $u$ auf $w$ projiziert und überprüft ob dieser größer als eine Konstante $c$ ist:
 \[
@@ -195,24 +212,24 @@ w  \boldsymbol{\cdot} u  \geq c
 \]
 Die Konstante $c$ ist hierbei der Abstand von $m$ zum Ursprung. In diesem Beispiel also:
 \[
-\bigl| w \bigl| + a
+c = \bigl| w \bigl| + a
 \]
 Trifft die oben genannte Bedingung zu, so wird $U$ als Punkt der Klasse $B$ klassifiziert, ansonsten als Punkt aus $A$.
 Die x-Komponente aller Punkte könnte in diesem Beispiel etwa die Länge des Beines der Testperson sein, während die y-Komponente die Länge des Nackens darstellt.\\
 Support Vector Maschinen funktionieren jedoch nicht nur im zweidimensionalen Raum, sondern in jedem beliebig-dimensionalen Raum. Die Trennung im dreidimensionalen Raum würde durch eine Fläche geschehen.\\
-Da in unserem Fall ein Problem mit mehr als zwei Klassen (11 Personen) vorliegt, werden mehrere verschiedene SVMs trainiert, wobei diese jeweils ein \textit{one-vs-rest}-Problem lösen. Dieses hat wiederum nur zwei Klassen (Klasse, nicht-Klasse) und ist darum für eine SVM geeignet.\\
+Da in unserem Fall ein Problem mit mehr als zwei Klassen (11 Personen) vorliegt, werden mehrere verschiedene SVMs trainiert, wobei diese jeweils ein \textit{one-vs-rest}-Problem lösen. Das heißt, dass jede einzelne SVM nur entscheiden muss, ob es sich um eine bestimmte Person handelt oder nicht. Dieses Problem hat wiederum nur zwei Klassen (Klasse, nicht-Klasse) und ist darum für eine SVM geeignet.\\
 Weitere Eigenschaften von SVMs (z.B. Umgang mit nicht linear lösbaren Problemen) werden in dieser Arbeit nicht behandelt, können jedoch in \cite{boser1992training} nachgelesen werden.
 
 \subsection{Umsetzung}
-\textit{sklearn} bietet zwei verschiedene Klassifizierungsalgorithmen für lineare SVMs an: \textit{svm.SVC} und \textit{svm.LinearSVC}. \textit{svm.SVC} verwendet die C++ Bibliothek \textit{libsvm}, welche verschiedene Kernelfunktionen (andere als linear) zulässt, während die C Bibliothek \textit{LinearSVC} zwar nur die lineare Kernelfunktion implementiert, jedoch effizienter programmiert ist.\\
-Da Performanz beim Training im Rahmen dieses Projektes nicht als Priorität gesehen wird und andere Kernelfunktionen zum Testen durchaus interessant sind, wurde sich für \textit{svm.SVC} entschieden.
+\textit{sklearn} bietet zwei verschiedene Klassifizierungsalgorithmen für lineare SVMs an: \textit{svm.SVC} und \textit{svm.LinearSVC}. \textit{svm.SVC} verwendet die C++ Bibliothek \textit{libsvm}, welche verschiedene Kernelfunktionen (andere als linear) zulässt, während die C Bibliothek \textit{LinearSVC} zwar nur die lineare Kernelfunktion implementiert, jedoch besser mit der Anzahl der Trainingsdatensätze \footnote{s. hierzu \url{http://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html}} skalieren kann.\\
+Da Performanz beim Training im Rahmen dieses Projektes nicht als Priorität gesehen wird und andere Kernelfunktionen mitunter auch eine bessere Präzision mit sich bringen können, wurde sich für \textit{svm.SVC} entschieden.
 Zur Evaluation soll die Präzision folgendermaßen definiert sein,
 \[
-\frac{\text{\#true positives}}{\text{\#true positives + \#false positives}}
+Pr\ddot{a}zision = \frac{\text{\#true positives}}{\text{\#true positives + \#false positives}}
 \]
 während die Trefferquote
 \[
-\frac{\text{\#true positives}}{\text{\#true positives + \#false negatives}}
+Trefferquote = \frac{\text{\#true positives}}{\text{\#true positives + \#false negatives}}
 \]
 ist.\\
 Die in Tabelle \ref{tab:svmprec} gezeigten Werte wurden unter Verwendung aller 16 Körperteilslängen von allen 11 Personen erreicht, während in den Abbildungen \ref{fig:svmtrain} und \ref{fig:svmtest} zur besseren Darstellung nur zwei Körperteile von zwei Personen verwendet wurden: der Nacken und die Schultern.\\
@@ -274,26 +291,26 @@ Sowohl die Verwendung der SVM als auch die Methoden zur Darstellung der Abbildun
 Decision Trees sind ein schon über 50 Jahre altes Konzept \cite{loh2014fifty}, welches gegenüber der Support Vector Machine sehr intuitiv funktioniert. Aufgrund des bereits guten Erfolges der SVM in Kapitel \ref{sec:svm} bietet sich der Entscheidungsbaum als weiterer Kategorisierungskandidat an, da auch dieser mit linear separierbaren Datensätzen sehr präzise und vor allem effizient umgehen kann.
 
 \subsection{Funktionsweise}
-Die Klassifizierung eines neuen Datenpunkts geschieht durch ein einfaches Abarbeiten mehrerer Bedingungsabfragen, welche im Trainingsvorgang gelernt wurden. Diese Abfragen werden in einen Binärbaum zusammengefasst, d.h. jeder Knoten hat nur maximal zwei Folgeknoten. Eine Klasse wurde erkannt, wenn ein Pfad von Abfragen bis zu einem Blatt führt.\\
-Da es viele Algorithmen zum Erstellen eines Entscheidungsbaums gibt (s. z.B. \textit{ID3} \cite{quinlan1986induction}) und diese mitunter relativ kompliziert sind, soll im Folgenden ein intuitiver Ansatz zum Aufbau eines Decision Trees gezeigt werden.\\
-
-\begin{figure}[H] 
-	\includegraphics[width=\textwidth]{img/tree_oberarm.png}
-	\caption{Unterarmlängen von vier Personen und mögliche Trennlinien, gezeichnet mit matplotlib}
-	\label{fig:tree_upperarm}
-\end{figure}
+Die Klassifizierung eines neuen Datenpunkts geschieht durch ein einfaches Abarbeiten mehrerer Bedingungsabfragen, welche im Trainingsvorgang erlernt wurden. Diese Abfragen werden in einem Binärbaum zusammengefasst, d.h. jeder Knoten hat nur maximal zwei Folgeknoten. Eine Klasse wurde erkannt, wenn ein Pfad von Abfragen bis zu einem Blatt führt.\\
+Da es viele Algorithmen zum Erstellen eines Entscheidungsbaums gibt (vgl. z.B. \textit{ID3} \cite{quinlan1986induction}) und diese mitunter relativ kompliziert sind, soll im Folgenden ein intuitiver Ansatz zum Aufbau eines Decision Trees gezeigt werden.\\
 
 \begin{figure}[H] 
 	\includegraphics[width=\textwidth]{img/tree_unterarm.png}
-	\caption{Oberarmlängen von vier Personen und mögliche Trennlinie, gezeichnet mit matplotlib}
-	\label{fig:tree_forearm}
+	\caption{Unterarmlängen von vier Personen und mögliche Trennlinien, gezeichnet mit matplotlib}
+	\label{fig:tree_unterarm}
 \end{figure}
 
-Als Inputs für unseren Entscheidungsbaum seien die Länge des Unterarms (Abb. \ref{fig:tree_forearm}) und die Länge des Oberarms (Abb. \ref{fig:tree_upperarm}) von vier Personen (rot,grün,grau,blau) gegeben. Nun versucht man, den Wert zu finden, anhand dessen sich der Datensatz am besten aufteilen lässt. Die genaue Strategie hierbei variiert je nach verwendetem Algorithmus, in diesem Fall könnte an zum Beispiel versuchen jeden Datensatz mit $2n$ Gruppen in kleinere Datensätze mit $n$ Gruppen aufzuteilen.\\
-Dies geschieht mit der horizontalen Trennlinie (gestrichelt) bei $0.32$ in Abbildung \ref{fig:tree_upperarm}. Die beiden Gruppen grau und blau werden durch diese Trennung komplett von den restlichen Gruppen isoliert.
+\begin{figure}[H] 
+	\includegraphics[width=\textwidth]{img/tree_oberarm.png}
+	\caption{Oberarmlängen von vier Personen und mögliche Trennlinie, gezeichnet mit matplotlib}
+	\label{fig:tree_oberarm}
+\end{figure}
+
+Als Inputs für unseren Entscheidungsbaum seien die Länge des Unterarms (Abb. \ref{fig:tree_unterarm}) und die Länge des Oberarms (Abb. \ref{fig:tree_oberarm}) von vier Personen (rot,grün,...) gegeben. Nun versucht man, den Wert zu finden, anhand dessen sich der Datensatz am besten aufteilen lässt. Die genaue Strategie hierbei variiert je nach verwendetem Algorithmus, in diesem Fall könnte jeder Datensatz mit $2n$ Gruppen in kleinere Datensätze mit $n$ Gruppen aufgeteilt werden.\\
+Dies geschieht mit der horizontalen Trennlinie (gestrichelt) bei $0.32$ in Abbildung \ref{fig:tree_oberarm}. Die beiden Gruppen grau und blau werden durch diese Trennung komplett von den restlichen Gruppen isoliert.
 Es gilt also: ist der Oberarm kürzer als ca. $0,256$, so handelt es sich wahrscheinlich um Gruppe grau oder blau, sonst um Gruppe  rot oder grün.\\
-Um nun noch zwischen diesen Gruppen unterscheiden zu können, betrachtet man noch zusätzlich die Unterarmlänge. Die Trennlinie in Abbildung \ref{fig:tree_forearm} ist hierbei ein guter Kandidat für die Unterteilung zwischen grau und blau.\\
-Analog wird das selbe Verfahren für die verbleibenden Gruppen rot und grün durchgeführt: Diese lassen sich durch die gepunktete Trennlinie in Abbildung \ref{fig:tree_upperarm} bei $0.265$ gut separieren.\\
+Um nun noch zwischen diesen Gruppen unterscheiden zu können, betrachtet man noch zusätzlich die Unterarmlänge. Die Trennlinie in Abbildung \ref{fig:tree_unterarm} ist hierbei ein guter Kandidat für die Unterteilung zwischen grau und blau.\\
+Analog wird das selbe Verfahren für die verbleibenden Gruppen rot und grün durchgeführt: Diese lassen sich durch die gepunktete Trennlinie in Abbildung \ref{fig:tree_oberarm} bei $0.265$ gut separieren.\\
 Die Abfragen unseres Baumes sind dann:
 \begin{lstlisting}[caption=einfacher Entscheidungsbaum,captionpos=b]
 if Oberarm < 0.256
@@ -310,11 +327,11 @@ else
 Selbst dieser sehr simple Entscheidungsbaum erreicht bei ihm unbekannten Testdaten eine Genauigkeit von $0.98$ (2 Inputfeatures, 4 Personen). Es sei jedoch angemerkt, dass die tatsächliche Vorgehensweise beim Aufbauen eines Entscheidungsbaumes nicht so ''primitiv'' wie in diesem Beispiel verläuft, das selbe Problem jedoch ähnlich wie bei einem intuitiven Verfahren löst.
 \subsection{Umsetzung}
 \textit{sklearn} bietet auch für Entscheidungsbäume eine Klasse: \textit{tree.DecisionTreeClassifier}. Dieser unterstützt mehrere Strategien zum Aufbauen des Baumes (z.B. maximaler Informationsgewinn, s. \cite{quinlan1986induction}), wobei in diesem Fall alle unterstützten Strategien gleich präzise sind.\\
-Eines der Probleme eines Decision Trees ist, wenn dieser schlecht generalisiert, d.h. wenn er mit noch nicht gesehenen Daten schlecht umgeht. Dies geschieht vor allem dann, wenn der Baum sehr tief wird. Um dies zu verhindern sollte die niedrigste Tiefe gewählt werden, die noch akzeptable Ergebnisse liefert.\\
+Eines der Probleme von Decision Trees ist, dass diese tendenziell schlechter als andere Machine Learning Ansätze generalisieren, d.h. dass diese mit nicht im Trainingssatz enthaltenen Daten schlechte Präzisionen erzielen. Dies geschieht vor allem dann, wenn der Baum sehr tief wird. Um dies zu verhindern sollte die niedrigste Tiefe gewählt werden, die noch akzeptable Ergebnisse liefert.\\
 
 \begin{figure}[H] 
 	\includegraphics[width=\textwidth]{img/treedepth.png}
-	\caption{Tiefe des Entscheidungsbaums gegen Präzision und Trefferquote}
+	\caption{Tiefe $d$ des Entscheidungsbaums gegen Präzision und Trefferquote}
 	\label{fig:tree_depth}
 \end{figure}
 
@@ -326,9 +343,11 @@ Der größte Unterschied zwischen beiden Algorithmen ist die Laufzeit zum Klassifi
 
 \chapter{Zusammenfassung}
 Das Projekt stellte sich als zeitlich anspruchsvoll heraus, wäre also wahrscheinlich auch zur Bearbeitung in einer Zweiergruppe geeignet gewesen. Dennoch konnte der Zeitplan eingehalten werden.\\
-In einige Teilbereiche des Machine Learnings wurde sich tief eingearbeitet (SVM,Decision Trees) und es konnten zwei hochperformante Kategorisierer gebaut werden. Der in dieser Arbeit nicht erwähnte Ansatz des Deep Learnings stellte sich als ungeeignet für diese Aufgabe heraus.\\
+In einige Teilbereiche des Machine Learnings wurde sich tief eingearbeitet (SVM,Decision Trees) und es konnten zwei hochperformante Kategorisierer gebaut werden. Der in dieser Arbeit nicht erwähnte Ansatz des Deep Learnings wurde ebenfalls evaluiert, jedoch konnte aufgrund fehlender Erfahrung im Umgang mit neuralen Netzen hierbei kein gutes Ergebnis erzielt werden. 
 Zur weiteren Verwendung im behandelten Anwendungsfall wird aufgrund seiner Laufzeitperformanz der Entscheidungsbaum empfohlen.\\
-Die Kinect Daten wurden nach ihrer Bearbeitung als gut geeignet für dieses Projekt befunden.
+Da zum Zeitpunkt der Fertigstellung dieser Arbeit noch neue Datensätze erfasst werden, bleibt die Frage offen, inwiefern die beiden behandelten Ansätze mit größeren Mengen von Inputdaten umgehen können. Diese Fragestellung könnte potentiell von Studenten zukünftiger Semester bearbeitet werden.\\
+Die Kinect Daten wurden nach ihrer Bearbeitung als gut geeignet für dieses Projekt befunden, d.h. dass die in \chapref{sec:import} erwähnte Einführung von mehr Inputfeatures wegfällt.\\
+Zusammenfassend kann gesagt werden, dass eine softwareseitige, hochpräzise Authentifizierung anhand von \textit{Kinect v2}-Daten, mit den in dieser Arbeit vorgestellten Ansätzen, möglich ist.
 
 \bibliography{bib}
 \bibliographystyle{unsrt}
